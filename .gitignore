@@ -1,2 +1,5 @@
 /.vscode
 *.exe
+*.class
+*.json
+test.*
