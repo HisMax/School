@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
-#define MAXN 5 //最多报数4轮
+#define MAXN 2023 //最多报数2022轮
 #define re register //循环变量放入寄存器
 struct Num{
     int v;//节点键值
