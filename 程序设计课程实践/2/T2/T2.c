@@ -70,12 +70,16 @@ int main(void){
 
     scanf("%d",&n);
     while(scanf("%d",&a[++cnt])!=EOF);//读入
-    cnt--;
-    Re();Set(1,n);//初始化列表
+    cnt--;//细节处理
+
+    Re();
+    Set(1,n);//初始化列表
+
     for(re int i = 1;i <= cnt;++i){//每次报数
         int x = 1,sum = 0;
         p = Opt(i);q = Opt(i+1);//当前表与报数后的表
         End(i)->next = p;//首尾相接
+
         while(sum!=n){//开始报数
             //printf("#### %d %d %d\n",sum,x,p->v); //进行一个调试
             if(p->v==-1){p = p->next;continue;}//跳过头节点
@@ -90,8 +94,10 @@ int main(void){
             x++;
             p = p->next;
         }
+
         End(i)->next = NULL; //解开首尾，便于Free()
     }
+
     //输出最后的列表
     p = Opt(cnt+1);
     while(p->next!=NULL){
@@ -99,6 +105,7 @@ int main(void){
         p = p->next;
     }
     printf("%4d",p->v);
+    //释放内存空间
     Free();
     return 0;
 }
