@@ -2,16 +2,22 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <assert.h>
+#include <stdlib.h>
 #define Int struct BigNumber
 #define Num struct num
-//默子将代码进行了一个缩写
-//Int 大整数类型(是一个结构体，有三个属性：数字位数，头结点，尾结点)
-//*p 一般都是工具人
 
-//声明函数 来自 Ex1.4样例程序 做了些许修改与补充注释
-//**************************************************************************
+/***************************************************************************
+ *   默子将代码进行了一个缩写
+ *   Int 大整数类型(是一个结构体，有三个属性：数字位数，头结点，尾结点)
+ *   *p 一般都是工具人
+ ***************************************************************************/
+
+/**************************************************************************
+ *   声明函数 来自 Ex1.4样例程序 做了些许修改与补充注释
+ **************************************************************************/
 
 //功能                  返回值      参数                        样例程序原名
+
 Int Read ();
 //读入数字               Int类型    无参数                       InputUBN()
 
@@ -39,8 +45,12 @@ void AddFront (Int *a, int v);
 void NoZero (Int *a);
 //去除前导零             无返回值    删除a前面多余的零             _Normalize()
 
-//**************************************************************************
+/**************************************************************************
+ *   声明函数 来自 默子 题目要求的函数
+ **************************************************************************/
 
+Int Minus(Int *a, Int *b);
+//减法                   Int类型    a减去b
 
 Num{//每一位一个结点
     int v;//具体的值 (范围0-9) 大于等于10将进位
@@ -104,38 +114,83 @@ void Puts (Int a){//输出数字
 Int Add (Int *a, Int *b){//   高精度的奥义就是模拟手算 手算yyds
     Int ans, *p = &ans;//ans 存答案
     Build(&ans);
-    int x = 0; //进位，初始0
+    int x = 0; //x是进位
     Num *p1, *p2;
     p1 = a->End; //从低位开始处理
     p2 = b->End;
-    while (p1 != a->Head && p2 != b->Head)   //两数相同位处理
-    {
+    while (p1 != a->Head && p2 != b->Head){
         int v = p1->v + p2->v + x;
-        x = v / 10; //新进位
-        v %= 10;         //当前结果位
-        AddFront (p, v); //添加至结果最高位
-        p1 = p1->pre; //准备处理前一位
-        p2 = p2->pre;
+        x = v / 10;v %= 10;AddFront (p, v);//实现手算的进位操作
+        p1 = p1->pre;p2 = p2->pre;
     }
-    while (p1 != a->Head)   //第一大数剩余位处理
-    {
+    while (p1 != a->Head){
         int v = p1->v + x;
-        x = v / 10;
-        v %= 10;
-        AddFront (p, v);
+        x = v / 10;v %= 10;AddFront (p, v);//同理
         p1 = p1->pre;
     }
-    while (p2 != b->Head)  //第二大数剩余位处理
-    {
+    while (p2 != b->Head){
         int v = p2->v + x;
-        x = v / 10;
-        v %= 10;
-        AddFront (p, v);
+        x = v / 10;v %= 10;AddFront (p, v);//同理
         p2 = p2->pre;
     }
-    if (x != 0) //最后进位处理
-        AddFront (p, x);
+    if (x != 0)AddFront (p, x);
     return ans;
+}
+Int Minus(Int *a, Int *b){
+    Int ans, *p = &ans;//ans 存答案
+    Build(&ans);
+    int x = 0; //x是借数
+    Num *p1, *p2;
+    p1 = a->End; //从低位开始处理
+    p2 = b->End;
+    //默子在这里使用了一个非常取巧的办法
+    //对着Add复制粘贴就出来了Minus
+    //手算时候这样主动借尾是比较傻的
+    //不过写代码的时候就比较省地方
+    while (p1 != a->Head && p2 != b->Head){
+        int v = p1->v - p2->v + x + 10;//每次不管够不够都主动借一个10
+        x = v / 10 - 1;//每次前一位自动失误1
+        v %= 10;
+        AddFront (p,v);
+        p1 = p1->pre;p2 = p2->pre;
+    }
+    while (p1 != a->Head){
+        int v = p1->v + x +10;
+        x = v / 10 - 1;v %= 10;AddFront (p, v);//同理
+        p1 = p1->pre;
+    }
+    while (p2 != b->Head){
+        int v = p2->v + x +10;
+        x = v / 10 - 1;v %= 10;AddFront (p, v);//同理
+        p2 = p2->pre;
+    }
+    if (x != 0)AddFront (p, x);
+    NoZero(&ans);
+    return ans;
+}
+void AddFront (Int *a, int v){
+    Num *p = New ();          //申请新结点
+    p->v = v;                 //设置结点数值
+    p->next = a->Head->next;  //修改双链表，添加在头结点后
+    if (p->next != NULL)p->next->pre = p;
+
+    p->pre = a->Head;
+    a->Head->next = p;
+
+    if (a->End == a->Head)a->End = p;
+    ++a->len;           //修改位数
+}
+//无符号大数规范表示，去除高位多余0，至少含一位数字
+void NoZero (Int *a){
+    if (a->len == 0)AddEnd (a, 0);//特判一个0
+    while (a->len > 1 && a->Head->next->v == 0){
+        Num *p;
+        p = a->Head->next; //待删除的结点
+        a->Head->next = p->next; //正向链表中删除
+        p->next->pre = a->Head; //反向链表中删除
+        free (p);               //释放结点
+        --a->len;               //调整位数
+    }
 }
 void Free (Int *a){
     while (a->Head != NULL)  //清空后应该只剩一个头结点
@@ -145,43 +200,16 @@ void Free (Int *a){
         free (p);                       //释放结点
     }
 }
-void AddFront (Int *a, int v)
-{
-    Num *p = New (); //申请新结点
-    p->v = v;             //设置结点数值
-    p->next = a->Head->next;  //修改双链表，添加在头结点后
-    if (p->next != NULL)
-        p->next->pre = p;
-    p->pre = a->Head;
-    a->Head->next = p;
-    if (a->End == a->Head)
-        a->End = p;          //原先只有头结点时，新结点也是尾结点
-    ++a->len;           //修改位数
-}
-//无符号大数规范表示，去除高位多余0，至少含一位数字
-void NoZero (Int *a)
-{
-    if (a->len == 0)
-        AddEnd (a, 0);
-    while (a->len > 1 && a->Head->next->v == 0)  //去除高位多余的0
-    {
-        Num *p;
-        p = a->Head->next; //待删除的结点
-        a->Head->next = p->next; //正向链表中删除
-        p->next->pre = a->Head; //反向链表中删除
-        free (p);                       //释放结点
-        --a->len;          //调整位数
-    }
-}
 int main (){
     Int A, B, C, D;
     A = Read ();
     B = Read ();
 
     C = Add (&A, &B);
-    Puts (A);printf (" + ");Puts (B);printf (" = ");Puts (C);
+    Puts (A);printf ("+");Puts (B);printf ("=");Puts (C);
+    printf("\n");
     D = Minus(&A, &B);
-    Puts (A);printf (" - ");Puts (B);printf (" = ");Puts (D);
+    Puts (A);printf ("-");Puts (B);printf ("=");Puts (D);
     Free (&A);
     Free (&B);
     Free (&C);
