@@ -8,7 +8,7 @@ struct BigInteger
 {
     static const int BASE = 100000000;
     static const int WIDTH = 8;
-    vector<int> s; // decrease significance order
+    vector<int> s; // increase significance order
     int flag;
 
     BigInteger(long long num = 0) : flag(1) { *this = num; }
@@ -115,6 +115,11 @@ struct BigInteger
         return c;
     }
 
+    void delete_leading_zero()
+    {
+        while (!s.empty() && s.back() == 0)
+            s.pop_back();
+    }
     BigInteger operator+(const BigInteger &b) const
     {
         BigInteger c;
@@ -143,6 +148,7 @@ struct BigInteger
             }
             c.s.push_back(x % BASE);
         }
+        c.delete_leading_zero();
         return c;
     }
     BigInteger operator-(const BigInteger &b) const
