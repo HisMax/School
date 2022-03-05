@@ -1,4 +1,3 @@
-
 # 欢迎大家给个 **Star** 蟹蟹٩('ω')
 
 这里是所有关于学校内容的库，包括日常作业代码:memo:，期末大作业:tada: ……等等。
@@ -15,6 +14,6 @@
 
 :sparkles:贡献者:sparkles:
 
-[默子](https://github.com/HisMax) 
+[默子](https://github.com/HisMax)
 
 [万老师](https://github.com/Kelatte)
