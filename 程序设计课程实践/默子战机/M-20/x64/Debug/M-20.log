@@ -1,0 +1,6 @@
+﻿  main.cpp
+E:\VS2022\IDE\VC\Auxiliary\VS\include\graphics.h(1,1): warning C4828: 文件包含在偏移 0x19d3 处开始的字符，该字符在当前源字符集中无效(代码页 936)。
+  start.cpp
+E:\VS2022\IDE\VC\Auxiliary\VS\include\graphics.h(1,1): warning C4828: 文件包含在偏移 0x19d3 处开始的字符，该字符在当前源字符集中无效(代码页 936)。
+  正在生成代码...
+  M-20.vcxproj -> F:\Histone\Code\School\程序设计课程实践\默子战机\M-20\x64\Debug\M-20.exe
