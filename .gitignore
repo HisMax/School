@@ -2,5 +2,3 @@
 *.exe
 *.class
 *.json
-/.vs
-/x64
