@@ -1,4 +1,9 @@
-//可能会存在C和Java版本的提交 Mozi
+// 可能会存在C和Java版本的提交 Mozi
+// 阅读顺序：
+// 先看Num结构体，和头节点数组，Mozi定义了一个大数组来存所有的头节点
+// 然后看main函数，用a数组存了每一遍的报数
+// Re和Set是最先执行的函数，用来申请空间和初始化
+//
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -14,10 +19,10 @@ struct Num* Opt(int opt){//opt表示选择哪个链表
     if(opt>=1&&opt<=MAXN)return head[opt-1];
     return head[0];
 }
-struct Num* End(int opt){//获取尾节点
+struct Num* End(int opt){//获取列表的尾节点
     struct Num *p = Opt(opt);
     while(p->next!=NULL){
-        if(p->next==Opt(opt))return p;
+        if(p->next==Opt(opt))return p;//循环列表的判断，如果又到头节点了，那就直接返回
         p = p->next;
     }
     return p;
@@ -56,7 +61,7 @@ void Re(){// 初始化并申请空间
     }
     return;
 }
-void Set(int opt,int n){
+void Set(int opt,int n){//初始化链表
     struct Num *p = Opt(opt);
     for(re int i = 1;i <= n;++i){
         //InsertEnd(p,i); 低效写法 O(n^2)
@@ -65,18 +70,18 @@ void Set(int opt,int n){
     return;
 }
 int main(void){
-    int n,a[128],cnt = 0;// n个数 cnt次报数 分别为 a1 a2 ……
+    int n,a[128],cnt = 0;// 共有n个数 cnt次报数 分别为 a1 a2 ……
     struct Num *p = NULL,*q = NULL;// 工具人（指针（bushi
 
     scanf("%d",&n);
     while(scanf("%d",&a[++cnt])!=EOF);//读入
     cnt--;//细节处理
 
-    Re();
-    Set(1,n);//初始化列表
+    Re();//申请空间
+    Set(1,n);//初始化列表，你也可以用一个循环来代替，毕竟只初始化第一个列表
 
     for(re int i = 1;i <= cnt;++i){//每次报数
-        int x = 1,sum = 0;
+        int x = 1,sum = 0;//x是累计报数，sum是出列人数
         p = Opt(i);q = Opt(i+1);//当前表与报数后的表
         End(i)->next = p;//首尾相接
 
@@ -84,15 +89,15 @@ int main(void){
             //printf("#### %d %d %d\n",sum,x,p->v); //进行一个调试
             if(p->v==-1){p = p->next;continue;}//跳过头节点
             if(p->v==-2){p = p->next;continue;}//跳过已出列节点
-            
-            if(x%a[i]==0){
-                InsertIn(q,p->v);
+
+            if(x%a[i]==0){//报数报到了
+                InsertIn(q,p->v);//将该数插入新的链表中
                 p->v = -2;
                 q = q->next;
-                sum++;
+                sum++;//统计有多少人已经报完数并出列了
             }
             x++;
-            p = p->next;
+            p = p->next;//接着奏乐，接着报数
         }
 
         End(i)->next = NULL; //解开首尾，便于Free()
