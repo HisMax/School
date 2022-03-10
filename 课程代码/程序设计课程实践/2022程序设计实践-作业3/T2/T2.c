@@ -1,9 +1,8 @@
 #include <stdio.h>
 //非常裸的一道DFS
 int mp[64][64];//存放矩阵
-int n,m;//矩阵大小
+int n,m,ans = 0;//矩阵大小,最终答案
 int vis[64][64];//记录已经访问过的位置
-int ans = 0;//最终答案
 int dx[5] = {0,1,-1,0,0};//方向数组
 int dy[5] = {0,0,0,-1,1};
 void dfs(int x,int y){
