@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head title="Moz">
+    <style>
+         :root {
+            text-align: center;
+            color: rebeccapurple;
+            background-color: #505050;
+        }
+        
+        footer {
+            text-align: center;
+            color: #f1f2f3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="histone.top" id="Hello">默子喜欢黑丝</a>
+    <button type="button" onclick="c()">点我试试？</button>
+</body>
+<footer>
+    <p>现在时间：</p>
+    <p id="times"></p>
+</footer>
+
+</html>
+<script>
+    document.writeln("Hello There");
+
+    function c() {
+        document.getElementById("Hello").innerHTML = "默子喜欢渔网";
+    }
+    while(1){
+        document.getElementById("times").innerHTML = Date();
+    }
+</script>
